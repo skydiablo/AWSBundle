@@ -1,5 +1,5 @@
 {
-  "name" : "SkyDiablo/AWSBundle",
+  "name" : "skydiablo/aws-bundle",
   "description" : "AWS Helper",
   "type" : "symfony-bundle",
   "authors" : [{
