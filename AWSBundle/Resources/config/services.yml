@@ -1,0 +1,4 @@
+services:
+#    sky_diablo_aws.example:
+#        class: SkyDiablo\AWSBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
