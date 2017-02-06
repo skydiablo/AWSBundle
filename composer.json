@@ -1,0 +1,30 @@
+{
+  "name" : "SkyDiablo/AWSBundle",
+  "description" : "AWS Helper",
+  "type" : "symfony-bundle",
+  "authors" : [{
+    "name" : "SkyDiablo",
+    "email" : "SkyDiablo@gmx.net"
+  }],
+  "keywords" : [
+    "aws"
+  ],
+  "license" : [
+    "MIT"
+  ],
+  "require" : {
+  },
+  "autoload" : {
+    "psr-0" : {
+      "SkyDiablo\\AWSBundle" : ""
+    }
+  },
+  "target-dir" : "SkyDiablo/AWSBundle",
+  "repositories" : [{
+  }],
+  "extra" : {
+    "branch-alias" : {
+      "dev-master" : "1.0-dev"
+    }
+  }
+}
