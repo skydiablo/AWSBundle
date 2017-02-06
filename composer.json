@@ -15,7 +15,7 @@
   "require" : {
   },
   "autoload" : {
-    "psr-0" : {
+    "psr-4": {
       "SkyDiablo\\AWSBundle" : ""
     }
   },
