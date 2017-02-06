@@ -18,7 +18,7 @@
   },
   "autoload": {
     "psr-4": {
-      "SkyDiablo\\AWSBundle": ""
+      "SkyDiablo\\AWSBundle\\": ""
     }
   },
   "repositories": [
