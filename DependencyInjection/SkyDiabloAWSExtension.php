@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\Loader;
 class SkyDiabloAWSExtension extends Extension
 {
 
+    const ALIAS = 'skydiablo_aws';
     const SERVICE_ID_COMMAND_ELASTIC_BEANSTALK_CLIENT = 'skydiablo.aws.command.elastic_beanstalk.client';
 
     /**
@@ -32,7 +33,14 @@ class SkyDiabloAWSExtension extends Extension
         $container->setAlias(self::SERVICE_ID_COMMAND_ELASTIC_BEANSTALK_CLIENT, $ebClient);
 
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
     }
+
+    public function getAlias()
+    {
+        return self::ALIAS;
+    }
+
+
 }
