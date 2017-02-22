@@ -25,6 +25,7 @@ abstract class SingleInstanceCommand extends ContainerAwareCommand
     const OPTION_AWS_EB_ENVIRONMENT = 'eb-env';
     const OPTION_FORCE_RUN = 'force-run';
     const OPTION_INSTANCE_GROUP = 'instance-group';
+    const OPTION_ENV_INSTANCE_GROUP = 'env-instance-group';
     const OPTION_INSTANCE_WAIT = 'instance-wait';
 
     protected function configure()
@@ -33,12 +34,15 @@ abstract class SingleInstanceCommand extends ContainerAwareCommand
             ->addOption(self::OPTION_AWS_EB_ENVIRONMENT, null, InputOption::VALUE_REQUIRED, 'AWS ElasticBeanstalk Environment Name')
             ->addOption(self::OPTION_FORCE_RUN, null, InputOption::VALUE_NONE, 'Force run command, without instance check.')
             ->addOption(self::OPTION_INSTANCE_GROUP, null, InputOption::VALUE_OPTIONAL, 'Allow to group same command calls in different scopes.')
+            ->addOption(self::OPTION_ENV_INSTANCE_GROUP, null, InputOption::VALUE_NONE, 'Use environment as instance group.')
             ->addOption(self::OPTION_INSTANCE_WAIT, null, InputOption::VALUE_NONE, 'Wait till other command call is done.');
         $code = function (InputInterface $input, OutputInterface $output) {
             $forceRun = $input->getOption(self::OPTION_FORCE_RUN);
             $environmentName = $input->getOption(self::OPTION_AWS_EB_ENVIRONMENT);
             if ($group = $input->getOption(self::OPTION_INSTANCE_GROUP)) {
                 $group = sprintf('%s_%s', $this->getName(), $group);
+            } elseif ($input->getOption(self::OPTION_ENV_INSTANCE_GROUP)) {
+                $group = sprintf('%s_%s', $this->getName(), $this->getContainer()->get('kernel.environment'));
             }
             $wait = (bool)$input->getOption(self::OPTION_INSTANCE_WAIT);
             if ($forceRun || ($this->lock($group, $wait) && $this->imTheFirst($environmentName))) {
