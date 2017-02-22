@@ -21,6 +21,7 @@ abstract class SingleInstanceCommand extends ContainerAwareCommand
 
     use LockableTrait;
 
+    const GROUP_AFFIX_FORMAT = '%s_%s';
     const AWS_INSTANCE_META_URL = 'http://instance-data/latest/meta-data/instance-id';
     const OPTION_AWS_EB_ENVIRONMENT = 'eb-env';
     const OPTION_FORCE_RUN = 'force-run';
@@ -40,9 +41,9 @@ abstract class SingleInstanceCommand extends ContainerAwareCommand
             $forceRun = $input->getOption(self::OPTION_FORCE_RUN);
             $environmentName = $input->getOption(self::OPTION_AWS_EB_ENVIRONMENT);
             if ($group = $input->getOption(self::OPTION_INSTANCE_GROUP)) {
-                $group = sprintf('%s_%s', $this->getName(), $group);
+                $group = sprintf(self::GROUP_AFFIX_FORMAT, $this->getName(), $group);
             } elseif ($input->getOption(self::OPTION_ENV_INSTANCE_GROUP)) {
-                $group = sprintf('%s_%s', $this->getName(), $this->getContainer()->get('kernel.environment'));
+                $group = sprintf(self::GROUP_AFFIX_FORMAT, $this->getName(), $this->getContainer()->get('kernel.environment'));
             }
             $wait = (bool)$input->getOption(self::OPTION_INSTANCE_WAIT);
             if ($forceRun || ($this->lock($group, $wait) && $this->imTheFirst($environmentName))) {
