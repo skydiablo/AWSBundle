@@ -37,7 +37,9 @@ abstract class SingleInstanceCommand extends ContainerAwareCommand
         $code = function (InputInterface $input, OutputInterface $output) {
             $forceRun = $input->getOption(self::OPTION_FORCE_RUN);
             $environmentName = $input->getOption(self::OPTION_AWS_EB_ENVIRONMENT);
-            $group = $input->getOption(self::OPTION_INSTANCE_GROUP);
+            if ($group = $input->getOption(self::OPTION_INSTANCE_GROUP)) {
+                $group = sprintf('%s_%s', $this->getName(), $group);
+            }
             $wait = (bool)$input->getOption(self::OPTION_INSTANCE_WAIT);
             if ($forceRun || ($this->lock($group, $wait) && $this->imTheFirst($environmentName))) {
                 return $this->execute($input, $output); // run normal flow...
