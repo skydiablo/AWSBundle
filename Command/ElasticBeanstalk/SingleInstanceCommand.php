@@ -43,7 +43,7 @@ abstract class SingleInstanceCommand extends ContainerAwareCommand
             if ($group = $input->getOption(self::OPTION_INSTANCE_GROUP)) {
                 $group = sprintf(self::GROUP_AFFIX_FORMAT, $this->getName(), $group);
             } elseif ($input->getOption(self::OPTION_ENV_INSTANCE_GROUP)) {
-                $group = sprintf(self::GROUP_AFFIX_FORMAT, $this->getName(), $this->getContainer()->get('kernel.environment'));
+                $group = sprintf(self::GROUP_AFFIX_FORMAT, $this->getName(), $this->getContainer()->getParameter('kernel.environment'));
             }
             $wait = (bool)$input->getOption(self::OPTION_INSTANCE_WAIT);
             if ($forceRun || ($this->lock($group, $wait) && $this->imTheFirst($environmentName))) {
