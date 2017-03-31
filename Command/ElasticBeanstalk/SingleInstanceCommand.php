@@ -30,6 +30,7 @@ abstract class SingleInstanceCommand extends ContainerAwareCommand
     const OPTION_INSTANCE_GROUP = 'instance-group';
     const OPTION_ENV_INSTANCE_GROUP = 'env-instance-group';
     const OPTION_INSTANCE_WAIT = 'instance-wait';
+    const OPTION_ALREADY_RUN_ERROR_CODE = 'already-run-error-code';
     const ENVIRONMENT_TYPE_NAME = 'EnvironmentName';
     const ENVIRONMENT_TYPE_ID = 'EnvironmentId';
 
@@ -41,10 +42,11 @@ abstract class SingleInstanceCommand extends ContainerAwareCommand
             ->addOption(self::OPTION_FORCE_RUN, null, InputOption::VALUE_NONE, 'Force run command, without instance check.')
             ->addOption(self::OPTION_INSTANCE_GROUP, null, InputOption::VALUE_OPTIONAL, 'Allow to group same command calls in different scopes.')
             ->addOption(self::OPTION_ENV_INSTANCE_GROUP, null, InputOption::VALUE_NONE, 'Use environment as instance group.')
-            ->addOption(self::OPTION_INSTANCE_WAIT, null, InputOption::VALUE_NONE, 'Wait till other command call is done.');
+            ->addOption(self::OPTION_INSTANCE_WAIT, null, InputOption::VALUE_NONE, 'Wait till other command call is done.')
+            ->addOption(self::OPTION_ALREADY_RUN_ERROR_CODE, null, InputOption::VALUE_OPTIONAL, 'Error code if command already run', 0);
         $code = function (InputInterface $input, OutputInterface $output) {
             $forceRun = $input->getOption(self::OPTION_FORCE_RUN);
-            if($awsEbEnvironment = $input->getOption(self::OPTION_AWS_EB_ENVIRONMENT_NAME)) {
+            if ($awsEbEnvironment = $input->getOption(self::OPTION_AWS_EB_ENVIRONMENT_NAME)) {
                 $awsEbEnvironmentType = self::ENVIRONMENT_TYPE_NAME;
             } elseif ($awsEbEnvironment = $input->getOption(self::OPTION_AWS_EB_ENVIRONMENT_ID)) {
                 $awsEbEnvironmentType = self::ENVIRONMENT_TYPE_ID;
@@ -63,7 +65,7 @@ abstract class SingleInstanceCommand extends ContainerAwareCommand
                 return $this->execute($input, $output); // run normal flow...
             }
             // exit command
-            return 100; // != 0 for error
+            return (int)$input->getOption(self::OPTION_ALREADY_RUN_ERROR_CODE); // != 0 for error
         };
         $this->setCode($code);
     }
