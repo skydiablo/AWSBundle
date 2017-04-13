@@ -45,15 +45,17 @@ abstract class SingleInstanceCommand extends ContainerAwareCommand
             ->addOption(self::OPTION_INSTANCE_WAIT, null, InputOption::VALUE_NONE, 'Wait till other command call is done.')
             ->addOption(self::OPTION_ALREADY_RUN_ERROR_CODE, null, InputOption::VALUE_OPTIONAL, 'Error code if command already run', 0);
         $code = function (InputInterface $input, OutputInterface $output) {
-            $forceRun = $input->getOption(self::OPTION_FORCE_RUN);
-            if ($awsEbEnvironment = $input->getOption(self::OPTION_AWS_EB_ENVIRONMENT_NAME)) {
-                $awsEbEnvironmentType = self::ENVIRONMENT_TYPE_NAME;
-            } elseif ($awsEbEnvironment = $input->getOption(self::OPTION_AWS_EB_ENVIRONMENT_ID)) {
-                $awsEbEnvironmentType = self::ENVIRONMENT_TYPE_ID;
-            } else {
-                throw new \InvalidArgumentException(sprintf('AWS EB environment name or id option is necessary, use "--%s XXX"', implode(' XXX | --', [
-                    self::OPTION_AWS_EB_ENVIRONMENT_NAME, self::OPTION_AWS_EB_ENVIRONMENT_ID
-                ])));
+            $awsEbEnvironmentType = $awsEbEnvironment = null;
+            if (!($forceRun = $input->getOption(self::OPTION_FORCE_RUN))) {
+                if ($awsEbEnvironment = $input->getOption(self::OPTION_AWS_EB_ENVIRONMENT_NAME)) {
+                    $awsEbEnvironmentType = self::ENVIRONMENT_TYPE_NAME;
+                } elseif ($awsEbEnvironment = $input->getOption(self::OPTION_AWS_EB_ENVIRONMENT_ID)) {
+                    $awsEbEnvironmentType = self::ENVIRONMENT_TYPE_ID;
+                } else {
+                    throw new \InvalidArgumentException(sprintf('AWS EB environment name or id option is necessary, use "--%s XXX"', implode(' XXX | --', [
+                        self::OPTION_AWS_EB_ENVIRONMENT_NAME, self::OPTION_AWS_EB_ENVIRONMENT_ID
+                    ])));
+                }
             }
             if ($group = $input->getOption(self::OPTION_INSTANCE_GROUP)) {
                 $group = sprintf(self::GROUP_AFFIX_FORMAT, $this->getName(), $group);
